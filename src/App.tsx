@@ -44,7 +44,7 @@ async function createFileFromPDF(pdfPath: string) {
 }
 
 export const App = () => {
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const [openBS, setOpenBS] = useState(false);
   const [price, setPrice] = useState(268.7);
   const [count, setCount] = useState(100);
@@ -53,7 +53,6 @@ export const App = () => {
   const [thxShow, setThx] = useState(LS.getItem(LSKeys.ShowThx, false));
   const [selectedPdf, setSelectedPdf] = useState<File | null>();
   const [numPages, setNumPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState<number>(1);
 
   const onDocumentLoadSuccess = ({ numPages }: DocumentCallback) => {
     setNumPages(numPages);
@@ -251,6 +250,18 @@ export const App = () => {
             </Typography.Text>
             <ButtonMobile block view="primary" onClick={() => setStep(3)}>
               Подписать документы
+            </ButtonMobile>
+          </div>
+        );
+      }
+      case 2: {
+        return (
+          <div className={appSt.containerBS}>
+            <Typography.Text view="component-secondary" color="secondary">
+              C вашего текущего счета будет списана сумма для покупки выбранной бумаги и зачислено на брокерский счет
+            </Typography.Text>
+            <ButtonMobile block view="primary" onClick={submit}>
+              Потвердить и купить
             </ButtonMobile>
           </div>
         );
