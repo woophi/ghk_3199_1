@@ -5,43 +5,19 @@ import { Gap } from '@alfalab/core-components/gap';
 import { SelectMobile } from '@alfalab/core-components/select/mobile';
 import { Typography } from '@alfalab/core-components/typography';
 import { useCallback, useState } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/esm/Page/TextLayer.css';
-import { DocumentCallback } from 'react-pdf/src/shared/types.js';
 import HB from './assets/hb.png';
-import pdf1 from './assets/pdf1.pdf';
-import pdf2 from './assets/pdf2.pdf';
-import pdf3 from './assets/pdf3.pdf';
 import rubIcon from './assets/rubIcon.png';
 import sberIcon from './assets/sber.png';
 import smileIcon from './assets/smile.png';
 import { LS, LSKeys } from './ls';
+import { Pdf1 } from './Pdfs';
 import { appSt } from './style.css';
 import { ThxLayout } from './thx/ThxLayout';
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString();
-
-const options = {
-  cMapUrl: '/cmaps/',
-  standardFontDataUrl: '/standard_fonts/',
-};
 
 const OPTIONS = [
   { key: 'Лимитная заявка', content: 'Лимитная заявка' },
   { key: 'Рыночная заявка', content: 'Рыночная заявка' },
 ];
-
-async function createFileFromPDF(pdfPath: string) {
-  // Fetch the PDF as a blob
-  const response = await fetch(pdfPath);
-  const blob = await response.blob();
-
-  // Create a File object from the blob
-  const file = new File([blob], 'sample.pdf', { type: 'application/pdf' });
-
-  return file;
-}
 
 export const App = () => {
   const [, setLoading] = useState(false);
@@ -51,12 +27,7 @@ export const App = () => {
   const [step, setStep] = useState(1);
   const [reqType, setReqTpe] = useState('Лимитная заявка');
   const [thxShow, setThx] = useState(LS.getItem(LSKeys.ShowThx, false));
-  const [selectedPdf, setSelectedPdf] = useState<File | null>();
-  const [numPages, setNumPages] = useState<number>();
-
-  const onDocumentLoadSuccess = ({ numPages }: DocumentCallback) => {
-    setNumPages(numPages);
-  };
+  const [selectedPdf, setSelectedPdf] = useState<string | null>();
 
   const submit = useCallback(() => {
     setLoading(true);
@@ -206,25 +177,18 @@ export const App = () => {
               Откройте брокерский счёт, чтобы купить этот актив
             </Typography.TitleResponsive>
 
-            <div className={appSt.sberRow} onClick={async () => setSelectedPdf(await createFileFromPDF(pdf1))}>
+            <div className={appSt.sberRow} onClick={() => setSelectedPdf('1')}>
               <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
               <Typography.Text view="component">Заявление на обслуживание на финансовых рынках</Typography.Text>
             </div>
-            <div className={appSt.sberRow} onClick={async () => setSelectedPdf(await createFileFromPDF(pdf2))}>
+            <div className={appSt.sberRow} onClick={() => setSelectedPdf('1')}>
               <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
               <Typography.Text view="component">Анкета депонента</Typography.Text>
             </div>
-            <div className={appSt.sberRow} onClick={async () => setSelectedPdf(await createFileFromPDF(pdf3))}>
+            <div className={appSt.sberRow} onClick={() => setSelectedPdf('1')}>
               <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
               <Typography.Text view="component">Декларация о рисках</Typography.Text>
             </div>
-            {selectedPdf && (
-              <Document options={options} file={selectedPdf} onLoadSuccess={onDocumentLoadSuccess}>
-                {Array.from(new Array(numPages), (_el, index) => (
-                  <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-                ))}
-              </Document>
-            )}
           </div>
         );
       }
@@ -356,6 +320,9 @@ export const App = () => {
         initialHeight="full"
       >
         {bsContent()}
+      </BottomSheet>
+      <BottomSheet stickyHeader hasCloser open={!!selectedPdf} onClose={() => setSelectedPdf(null)} initialHeight="full">
+        <Pdf1 />
       </BottomSheet>
     </>
   );

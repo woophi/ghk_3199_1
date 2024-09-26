@@ -82,6 +82,10 @@ globalStyle(`${inputActionsMinus} > svg > rect:last-child`, {
   fill: '#04041578',
 });
 
+const pdfPage = style({
+  fontSize: '1rem !important',
+});
+
 export const appSt = {
   bottomBtn,
   container,
@@ -95,4 +99,5 @@ export const appSt = {
   inputActions,
   inputActionsHR,
   inputActionsMinus,
+  pdfPage,
 };
