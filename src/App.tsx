@@ -2,15 +2,14 @@ import { BottomSheet } from '@alfalab/core-components/bottom-sheet';
 import { ButtonMobile } from '@alfalab/core-components/button/mobile';
 import { CDNIcon } from '@alfalab/core-components/cdn-icon';
 import { Gap } from '@alfalab/core-components/gap';
+import { Notification } from '@alfalab/core-components/notification';
 import { SelectMobile } from '@alfalab/core-components/select/mobile';
 import { Typography } from '@alfalab/core-components/typography';
 import { useCallback, useState } from 'react';
 import HB from './assets/hb.png';
 import rubIcon from './assets/rubIcon.png';
 import sberIcon from './assets/sber.png';
-import smileIcon from './assets/smile.png';
 import { LS, LSKeys } from './ls';
-import { Pdf1 } from './Pdfs';
 import { appSt } from './style.css';
 import { ThxLayout } from './thx/ThxLayout';
 
@@ -19,20 +18,25 @@ const OPTIONS = [
   { key: 'Рыночная заявка', content: 'Рыночная заявка' },
 ];
 
+const generate4RandomDigits = () => {
+  return Math.floor(1000 + Math.random() * 9000).toString();
+};
+
 export const App = () => {
   const [, setLoading] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const [openBS, setOpenBS] = useState(false);
+  const [otpCode, setCode] = useState('');
   const [price, setPrice] = useState(268.7);
   const [count, setCount] = useState(100);
   const [step, setStep] = useState(1);
   const [reqType, setReqTpe] = useState('Лимитная заявка');
   const [thxShow, setThx] = useState(LS.getItem(LSKeys.ShowThx, false));
-  const [selectedPdf, setSelectedPdf] = useState<string | null>();
-
+  const splittedOtp = otpCode.split('');
   const submit = useCallback(() => {
     setLoading(true);
 
-    LS.setItem(LSKeys.ShowThx, true);
+    // LS.setItem(LSKeys.ShowThx, true);
     setThx(true);
     setLoading(false);
     // sendDataToGA({
@@ -56,6 +60,17 @@ export const App = () => {
   }, []);
   const onDownCount = useCallback(() => {
     setCount(v => (v <= 0 ? 0 : v - 1));
+  }, []);
+
+  const goToBuy = useCallback(() => {
+    setStep(2);
+
+    setTimeout(() => {
+      setShowNotification(true);
+    }, 2500);
+    setTimeout(() => {
+      setCode(generate4RandomDigits());
+    }, 3000);
   }, []);
 
   if (thxShow) {
@@ -172,22 +187,18 @@ export const App = () => {
       case 2: {
         return (
           <div className={appSt.containerBS}>
-            <img src={smileIcon} width={48} height={48} />
             <Typography.TitleResponsive tag="h3" view="small" font="system" weight="semibold">
-              Откройте брокерский счёт, чтобы купить этот актив
+              Введите код из сообщения, чтобы открыть брокерский счёт и купить этот актив
             </Typography.TitleResponsive>
+            <Typography.Text tag="p" view="primary-medium" color="secondary">
+              Код отправлен на телефон указанный в анкете
+            </Typography.Text>
 
-            <div className={appSt.sberRow} onClick={() => setSelectedPdf('1')}>
-              <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
-              <Typography.Text view="component">Заявление на обслуживание на финансовых рынках</Typography.Text>
-            </div>
-            <div className={appSt.sberRow} onClick={() => setSelectedPdf('1')}>
-              <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
-              <Typography.Text view="component">Анкета депонента</Typography.Text>
-            </div>
-            <div className={appSt.sberRow} onClick={() => setSelectedPdf('1')}>
-              <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
-              <Typography.Text view="component">Декларация о рисках</Typography.Text>
+            <div className={appSt.codeBoxContainer}>
+              <div className={appSt.codeBox}>{splittedOtp[0] ?? ''}</div>
+              <div className={appSt.codeBox}>{splittedOtp[1] ?? ''}</div>
+              <div className={appSt.codeBox}>{splittedOtp[2] ?? ''}</div>
+              <div className={appSt.codeBox}>{splittedOtp[3] ?? ''}</div>
             </div>
           </div>
         );
@@ -202,29 +213,20 @@ export const App = () => {
     switch (step) {
       case 1:
         return (
-          <ButtonMobile block view="primary" onClick={() => setStep(2)}>
+          <ButtonMobile block view="primary" onClick={goToBuy}>
             Купить
           </ButtonMobile>
         );
       case 2: {
         return (
           <div className={appSt.containerBS}>
-            <Typography.Text view="component-secondary" color="secondary">
-              Нажимая «Подписать документы», вы подписываете документы для открытия брокерского счёта
-            </Typography.Text>
-            <ButtonMobile block view="primary" onClick={() => setStep(3)}>
-              Подписать документы
-            </ButtonMobile>
-          </div>
-        );
-      }
-      case 2: {
-        return (
-          <div className={appSt.containerBS}>
-            <Typography.Text view="component-secondary" color="secondary">
+            <Typography.Text view="component-secondary">
               C вашего текущего счета будет списана сумма для покупки выбранной бумаги и зачислено на брокерский счет
             </Typography.Text>
-            <ButtonMobile block view="primary" onClick={submit}>
+            <Typography.Text view="component-secondary">
+              Нажимая «Продолжить», вы подписываете документы для открытия брокерского счёта
+            </Typography.Text>
+            <ButtonMobile block view="primary" onClick={submit} disabled={!otpCode}>
               Потвердить и купить
             </ButtonMobile>
           </div>
@@ -321,9 +323,16 @@ export const App = () => {
       >
         {bsContent()}
       </BottomSheet>
-      <BottomSheet stickyHeader hasCloser open={!!selectedPdf} onClose={() => setSelectedPdf(null)} initialHeight="full">
-        <Pdf1 />
-      </BottomSheet>
+
+      <Notification
+        title="Код для подписания документов:"
+        visible={showNotification}
+        offset={20}
+        onCloseTimeout={() => setShowNotification(false)}
+        hasCloser={false}
+      >
+        {otpCode}
+      </Notification>
     </>
   );
 };

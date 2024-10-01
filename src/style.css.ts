@@ -82,8 +82,23 @@ globalStyle(`${inputActionsMinus} > svg > rect:last-child`, {
   fill: '#04041578',
 });
 
-const pdfPage = style({
-  fontSize: '1rem !important',
+const codeBoxContainer = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+});
+
+const codeBox = style({
+  width: '36px',
+  height: '48px',
+  backgroundColor: 'rgba(38, 55, 88, 0.06)',
+  fontSize: '30px',
+  fontWeight: 700,
+  textAlign: 'center',
+  borderRadius: '4px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 });
 
 export const appSt = {
@@ -99,5 +114,6 @@ export const appSt = {
   inputActions,
   inputActionsHR,
   inputActionsMinus,
-  pdfPage,
+  codeBox,
+  codeBoxContainer,
 };
