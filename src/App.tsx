@@ -123,36 +123,39 @@ export const App = () => {
               selected={reqType}
             />
 
-            <Typography.TitleResponsive tag="h3" view="xsmall" font="system" weight="semibold">
-              Цена за акцию
-            </Typography.TitleResponsive>
+            {reqType === 'Лимитная заявка' && (
+              <>
+                <Typography.TitleResponsive tag="h3" view="xsmall" font="system" weight="semibold">
+                  Цена за акцию
+                </Typography.TitleResponsive>
+                <div>
+                  <div className={appSt.inputContainer}>
+                    <div className={appSt.inputValue}>
+                      <Typography.Text tag="p" view="primary-medium" defaultMargins={false}>
+                        {price}
+                      </Typography.Text>
+                      <Typography.Text tag="p" view="primary-medium" defaultMargins={false}>
+                        ₽
+                      </Typography.Text>
+                    </div>
 
-            <div>
-              <div className={appSt.inputContainer}>
-                <div className={appSt.inputValue}>
-                  <Typography.Text tag="p" view="primary-medium" defaultMargins={false}>
-                    {price}
-                  </Typography.Text>
-                  <Typography.Text tag="p" view="primary-medium" defaultMargins={false}>
-                    ₽
+                    <div className={appSt.inputActions}>
+                      <span onClick={onDown} style={{ display: 'inline-flex' }}>
+                        <CDNIcon name="glyph_minus_m" className={appSt.inputActionsMinus} />
+                      </span>
+                      <div className={appSt.inputActionsHR} />
+
+                      <span onClick={onUp} style={{ display: 'inline-flex' }}>
+                        <CDNIcon name="glyph_plus_m" />
+                      </span>
+                    </div>
+                  </div>
+                  <Typography.Text view="component-secondary" color="secondary">
+                    Шаг цены 0,01
                   </Typography.Text>
                 </div>
-
-                <div className={appSt.inputActions}>
-                  <span onClick={onDown} style={{ display: 'inline-flex' }}>
-                    <CDNIcon name="glyph_minus_m" className={appSt.inputActionsMinus} />
-                  </span>
-                  <div className={appSt.inputActionsHR} />
-
-                  <span onClick={onUp} style={{ display: 'inline-flex' }}>
-                    <CDNIcon name="glyph_plus_m" />
-                  </span>
-                </div>
-              </div>
-              <Typography.Text view="component-secondary" color="secondary">
-                Шаг цены 0,01
-              </Typography.Text>
-            </div>
+              </>
+            )}
 
             <Typography.TitleResponsive tag="h3" view="xsmall" font="system" weight="semibold">
               Количество лотов
