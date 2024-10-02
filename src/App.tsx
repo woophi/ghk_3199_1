@@ -26,7 +26,7 @@ export const App = () => {
   const [openBS, setOpenBS] = useState(false);
   const [otpCode, setCode] = useState('');
   const [price, setPrice] = useState(268.7);
-  const [count, setCount] = useState(100);
+  const [count, setCount] = useState(1);
   const [step, setStep] = useState(1);
   const [reqType, setReqTpe] = useState('Лимитная заявка');
   const splittedOtp = otpCode.split('');
