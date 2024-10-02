@@ -252,7 +252,7 @@ export const App = () => {
               C вашего текущего счета будет списана сумма для покупки выбранной бумаги и зачислено на брокерский счет
             </Typography.Text>
             <Typography.Text view="component-secondary">
-              Нажимая «Продолжить», вы подписываете документы для открытия брокерского счёта
+              Нажимая «Подтвердить и купить», вы соглашаетесь отправить заявку на открытие брокерского счёта
             </Typography.Text>
             <ButtonMobile loading={loading} block view="primary" onClick={submit} disabled={!otpCode}>
               Потвердить и купить
