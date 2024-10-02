@@ -197,6 +197,20 @@ export const App = () => {
               <div className={appSt.codeBox}>{splittedOtp[2] ?? ''}</div>
               <div className={appSt.codeBox}>{splittedOtp[3] ?? ''}</div>
             </div>
+
+            <div />
+            <div className={appSt.sberRow}>
+              <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
+              <Typography.Text view="component">Заявление на обслуживание на финансовых рынках</Typography.Text>
+            </div>
+            <div className={appSt.sberRow}>
+              <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
+              <Typography.Text view="component">Анкета депонента</Typography.Text>
+            </div>
+            <div className={appSt.sberRow}>
+              <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
+              <Typography.Text view="component">Декларация о рисках</Typography.Text>
+            </div>
           </div>
         );
       }
