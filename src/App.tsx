@@ -9,7 +9,9 @@ import { useCallback, useState } from 'react';
 import HB from './assets/hb.png';
 import rubIcon from './assets/rubIcon.png';
 import sberIcon from './assets/sber.png';
+import { LS, LSKeys } from './ls';
 import { appSt } from './style.css';
+import { ThxLayout } from './thx/ThxLayout';
 
 const OPTIONS = [
   { key: 'Лимитная заявка', content: 'Лимитная заявка' },
@@ -41,6 +43,7 @@ export const App = () => {
     //   email: email ? 1 : 0,
     // }).then(() => {
     // });
+    LS.setItem(LSKeys.ShowThx, true);
     window.location.replace('alfabank://investments/open_brokerage_account');
   }, []);
 
@@ -231,6 +234,10 @@ export const App = () => {
         return null;
     }
   };
+
+  if (LS.getItem(LSKeys.ShowThx, false)) {
+    return <ThxLayout />;
+  }
 
   return (
     <>
