@@ -9,9 +9,7 @@ import { useCallback, useState } from 'react';
 import HB from './assets/hb.png';
 import rubIcon from './assets/rubIcon.png';
 import sberIcon from './assets/sber.png';
-import { LS, LSKeys } from './ls';
 import { appSt } from './style.css';
-import { ThxLayout } from './thx/ThxLayout';
 
 const OPTIONS = [
   { key: 'Лимитная заявка', content: 'Лимитная заявка' },
@@ -23,7 +21,7 @@ const generate4RandomDigits = () => {
 };
 
 export const App = () => {
-  const [, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [openBS, setOpenBS] = useState(false);
   const [otpCode, setCode] = useState('');
@@ -31,14 +29,10 @@ export const App = () => {
   const [count, setCount] = useState(100);
   const [step, setStep] = useState(1);
   const [reqType, setReqTpe] = useState('Лимитная заявка');
-  const [thxShow, setThx] = useState(LS.getItem(LSKeys.ShowThx, false));
   const splittedOtp = otpCode.split('');
   const submit = useCallback(() => {
     setLoading(true);
 
-    // LS.setItem(LSKeys.ShowThx, true);
-    setThx(true);
-    setLoading(false);
     // sendDataToGA({
     //   autopayments: Number(checked) as 1 | 0,
     //   limit: Number(checked2) as 1 | 0,
@@ -47,6 +41,7 @@ export const App = () => {
     //   email: email ? 1 : 0,
     // }).then(() => {
     // });
+    window.location.replace('alfabank://investments/open_brokerage_account');
   }, []);
 
   const onUp = useCallback(() => {
@@ -72,10 +67,6 @@ export const App = () => {
       setCode(generate4RandomDigits());
     }, 3000);
   }, []);
-
-  if (thxShow) {
-    return <ThxLayout />;
-  }
 
   const bsContent = () => {
     switch (step) {
@@ -229,7 +220,7 @@ export const App = () => {
             <Typography.Text view="component-secondary">
               Нажимая «Продолжить», вы подписываете документы для открытия брокерского счёта
             </Typography.Text>
-            <ButtonMobile block view="primary" onClick={submit} disabled={!otpCode}>
+            <ButtonMobile loading={loading} block view="primary" onClick={submit} disabled={!otpCode}>
               Потвердить и купить
             </ButtonMobile>
           </div>
