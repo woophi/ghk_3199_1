@@ -12,6 +12,7 @@ import sberIcon from './assets/sber.png';
 import { LS, LSKeys } from './ls';
 import { appSt } from './style.css';
 import { ThxLayout } from './thx/ThxLayout';
+import { sendDataToGA } from './utils/events';
 
 const OPTIONS = [
   { key: 'Лимитная заявка', content: 'Лимитная заявка' },
@@ -32,20 +33,20 @@ export const App = () => {
   const [step, setStep] = useState(1);
   const [reqType, setReqTpe] = useState('Лимитная заявка');
   const splittedOtp = otpCode.split('');
+
   const submit = useCallback(() => {
+    window.gtag('event', '3199_confirm_v1');
     setLoading(true);
 
-    // sendDataToGA({
-    //   autopayments: Number(checked) as 1 | 0,
-    //   limit: Number(checked2) as 1 | 0,
-    //   limit_sum: limit ?? 0,
-    //   insurance: Number(checked3) as 1 | 0,
-    //   email: email ? 1 : 0,
-    // }).then(() => {
-    // });
-    LS.setItem(LSKeys.ShowThx, true);
-    window.location.replace('alfabank://investments/open_brokerage_account');
-  }, []);
+    sendDataToGA({
+      bid: reqType,
+      count,
+      price,
+    }).then(() => {
+      LS.setItem(LSKeys.ShowThx, true);
+      window.location.replace('alfabank://investments/open_brokerage_account');
+    });
+  }, [reqType, count, price]);
 
   const onUp = useCallback(() => {
     setPrice(v => Number((v >= 999 ? 999 : v + 0.01).toFixed(2)));
@@ -61,6 +62,7 @@ export const App = () => {
   }, []);
 
   const goToBuy = useCallback(() => {
+    window.gtag('event', '3199_buy_stocks_v1');
     setStep(2);
 
     setTimeout(() => {
@@ -199,15 +201,30 @@ export const App = () => {
             </div>
 
             <div />
-            <div className={appSt.sberRow}>
+            <div
+              className={appSt.sberRow}
+              onClick={() => {
+                window.gtag('event', '3199_doc1_v1');
+              }}
+            >
               <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
               <Typography.Text view="component">Заявление на обслуживание на финансовых рынках</Typography.Text>
             </div>
-            <div className={appSt.sberRow}>
+            <div
+              className={appSt.sberRow}
+              onClick={() => {
+                window.gtag('event', '3199_doc2_v1');
+              }}
+            >
               <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
               <Typography.Text view="component">Анкета депонента</Typography.Text>
             </div>
-            <div className={appSt.sberRow}>
+            <div
+              className={appSt.sberRow}
+              onClick={() => {
+                window.gtag('event', '3199_doc3_v1');
+              }}
+            >
               <CDNIcon name="glyph_documents-lines_m" color="#04041578" />
               <Typography.Text view="component">Декларация о рисках</Typography.Text>
             </div>
@@ -317,7 +334,14 @@ export const App = () => {
       <Gap size={96} />
 
       <div className={appSt.bottomBtn}>
-        <ButtonMobile block view="primary" onClick={() => setOpenBS(true)}>
+        <ButtonMobile
+          block
+          view="primary"
+          onClick={() => {
+            window.gtag('event', '3199_buy_v1');
+            setOpenBS(true);
+          }}
+        >
           Купить
         </ButtonMobile>
       </div>
@@ -330,7 +354,10 @@ export const App = () => {
           </Typography.Text>
         }
         open={openBS}
-        onClose={() => setOpenBS(false)}
+        onClose={() => {
+          window.gtag('event', '3199_x_v1');
+          setOpenBS(false);
+        }}
         hasCloser
         titleAlign="center"
         actionButton={bsButton()}

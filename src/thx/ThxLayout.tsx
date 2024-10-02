@@ -17,7 +17,10 @@ export const ThxLayout = () => {
         <ButtonMobile
           block
           view="primary"
-          onClick={() => window.location.replace('alfabank://investments/open_brokerage_account')}
+          onClick={() => {
+            window.gtag('event', '3199_to_account_v1');
+            window.location.replace('alfabank://investments/open_brokerage_account');
+          }}
         >
           Перейти к счёту
         </ButtonMobile>
