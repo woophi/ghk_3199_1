@@ -24,6 +24,8 @@ const generate4RandomDigits = () => {
 };
 
 export const App = () => {
+  const [withFirstError, setWithFirstError] = useState(false);
+  const [showThx, setThx] = useState(LS.getItem(LSKeys.ShowThx, false));
   const [loading, setLoading] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [openBS, setOpenBS] = useState(false);
@@ -37,14 +39,14 @@ export const App = () => {
   const submit = useCallback(() => {
     window.gtag('event', '3199_confirm_v1');
     setLoading(true);
-
+    setWithFirstError(true);
     sendDataToGA({
       bid: reqType,
       count,
       price,
     }).then(() => {
       LS.setItem(LSKeys.ShowThx, true);
-      window.location.replace('alfabank://investments/open_brokerage_account');
+      setThx(true);
     });
   }, [reqType, count, price]);
 
@@ -266,8 +268,8 @@ export const App = () => {
     }
   };
 
-  if (LS.getItem(LSKeys.ShowThx, false)) {
-    return <ThxLayout />;
+  if (showThx) {
+    return <ThxLayout withFirstError={withFirstError} />;
   }
 
   return (
